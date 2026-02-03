@@ -1,605 +1,544 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Blueprint for Progress – Character Traits Check-In</title>
-<style>
-:root{
-  --ink:#111;
-  --muted:#555;
-  --rowA:#fff;
-  --rowB:#ededed;
-  --line:#cfcfcf;
-  --dotBorder:#6f6f6f;
-  --font:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-}
-body{margin:0;font-family:var(--font);color:var(--ink);background:#fff;}
-.wrap{max-width:980px;margin:0 auto;padding:18px 14px 36px;}
-h1{font-size:18px;margin:0 0 6px;}
-.sub{font-size:13px;color:var(--muted);max-width:75ch;}
-.controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-button{
-  border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:10px;
-  font-size:13px;cursor:pointer;
-}
-.meta{margin:14px 0 10px;font-size:13px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-input[type="text"]{border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:13px;min-width:160px}
-.list{border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.row{
-  display:grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap:10px;
-  align-items:center;
-  padding:10px 12px;
-  border-bottom:1px solid var(--line);
-}
-.row:nth-child(odd){background:var(--rowA)}
-.row:nth-child(even){background:var(--rowB)}
-.row:last-child{border-bottom:none}
-.left{font-size:14px;text-align:right;line-height:1.15}
-.right{font-size:14px;text-align:left;line-height:1.15}
-
-/* radio dots */
-.scale{display:flex;gap:10px;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid #bdbdbd;background:#fdfdfd}
-.scale input{appearance:none;-webkit-appearance:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--dotBorder);background:#fff;cursor:pointer}
-.scale input:checked{background:#111;border-color:#111;box-shadow:inset 0 0 0 3px #fff}
-
-/* phone-first: keep left–dots–right on one line */
-@media(max-width:700px){
-  .left{text-align:left;font-size:13px}
-  .right{text-align:right;font-size:13px}
-  .scale{gap:8px;padding:6px 8px}
-  .scale input{width:18px;height:18px}
-}
-@media(max-width:420px){
-  .left,.right{font-size:12px}
-  .scale{gap:7px}
-  .scale input{width:17px;height:17px}
-}
-.footer{margin-top:12px;font-size:12px;color:var(--muted)}
-.small{font-size:12px;color:var(--muted)}
-</style>
-</head>
-
-<body>
-<div class="wrap">
-  <h1>Blueprint for Progress – Character Traits Check-In</h1>
-  <div class="sub">
-    Tap one dot per row. Middle = balanced/neutral. Dots toward either side show where you lean today.
-  </div>
-
-  <div class="controls">
-    <button type="button" onclick="clearAll()">Clear all</button>
-    <button type="button" onclick="copyResults()">Copy results</button>
-  </div>
-
-  <div class="meta">
-    Date (optional):
-    <input id="dateField" type="text" placeholder="YYYY-MM-DD" />
-    <span id="progress">0 / 42 selected</span>
-  </div>
-
-  <div class="list" id="list">
-
-    <!-- TEMPLATE ROW STRUCTURE:
-      Left label | 5 radio dots | Right label
-      Values: -2, -1, 0, 1, 2
-    -->
-
-    <!-- 1 -->
-    <div class="row" data-left="Aware of others" data-right="Self-centered">
-      <div class="left">Aware of others</div>
-      <div class="scale">
-        <input type="radio" name="t1" value="-2" aria-label="strongly left">
-        <input type="radio" name="t1" value="-1" aria-label="slightly left">
-        <input type="radio" name="t1" value="0"  aria-label="middle">
-        <input type="radio" name="t1" value="1"  aria-label="slightly right">
-        <input type="radio" name="t1" value="2"  aria-label="strongly right">
-      </div>
-      <div class="right">Self-centered</div>
-    </div>
-
-    <!-- 2 -->
-    <div class="row" data-left="Helpful to others" data-right="Self-indulgent">
-      <div class="left">Helpful to others</div>
-      <div class="scale">
-        <input type="radio" name="t2" value="-2">
-        <input type="radio" name="t2" value="-1">
-        <input type="radio" name="t2" value="0">
-        <input type="radio" name="t2" value="1">
-        <input type="radio" name="t2" value="2">
-      </div>
-      <div class="right">Self-indulgent</div>
-    </div>
-
-    <!-- 3 -->
-    <div class="row" data-left="Generous" data-right="Selfish">
-      <div class="left">Generous</div>
-      <div class="scale">
-        <input type="radio" name="t3" value="-2">
-        <input type="radio" name="t3" value="-1">
-        <input type="radio" name="t3" value="0">
-        <input type="radio" name="t3" value="1">
-        <input type="radio" name="t3" value="2">
-      </div>
-      <div class="right">Selfish</div>
-    </div>
-
-    <!-- 4 -->
-    <div class="row" data-left="Thoughtful" data-right="Self-pitying">
-      <div class="left">Thoughtful</div>
-      <div class="scale">
-        <input type="radio" name="t4" value="-2">
-        <input type="radio" name="t4" value="-1">
-        <input type="radio" name="t4" value="0">
-        <input type="radio" name="t4" value="1">
-        <input type="radio" name="t4" value="2">
-      </div>
-      <div class="right">Self-pitying</div>
-    </div>
-
-    <!-- 5 -->
-    <div class="row" data-left="Open-minded, gracious" data-right="Smug, stubborn">
-      <div class="left">Open-minded, gracious</div>
-      <div class="scale">
-        <input type="radio" name="t5" value="-2">
-        <input type="radio" name="t5" value="-1">
-        <input type="radio" name="t5" value="0">
-        <input type="radio" name="t5" value="1">
-        <input type="radio" name="t5" value="2">
-      </div>
-      <div class="right">Smug, stubborn</div>
-    </div>
-
-    <!-- 6 -->
-    <div class="row" data-left="Perceptive" data-right="Judgmental">
-      <div class="left">Perceptive</div>
-      <div class="scale">
-        <input type="radio" name="t6" value="-2"><input type="radio" name="t6" value="-1"><input type="radio" name="t6" value="0"><input type="radio" name="t6" value="1"><input type="radio" name="t6" value="2">
-      </div>
-      <div class="right">Judgmental</div>
-    </div>
-
-    <!-- 7 -->
-    <div class="row" data-left="Respectful" data-right="Disrespectful">
-      <div class="left">Respectful</div>
-      <div class="scale">
-        <input type="radio" name="t7" value="-2"><input type="radio" name="t7" value="-1"><input type="radio" name="t7" value="0"><input type="radio" name="t7" value="1"><input type="radio" name="t7" value="2">
-      </div>
-      <div class="right">Disrespectful</div>
-    </div>
-
-    <!-- 8 -->
-    <div class="row" data-left="Patient" data-right="Impatient">
-      <div class="left">Patient</div>
-      <div class="scale">
-        <input type="radio" name="t8" value="-2"><input type="radio" name="t8" value="-1"><input type="radio" name="t8" value="0"><input type="radio" name="t8" value="1"><input type="radio" name="t8" value="2">
-      </div>
-      <div class="right">Impatient</div>
-    </div>
-
-    <!-- 9 -->
-    <div class="row" data-left="Tolerant" data-right="Intolerant">
-      <div class="left">Tolerant</div>
-      <div class="scale">
-        <input type="radio" name="t9" value="-2"><input type="radio" name="t9" value="-1"><input type="radio" name="t9" value="0"><input type="radio" name="t9" value="1"><input type="radio" name="t9" value="2">
-      </div>
-      <div class="right">Intolerant</div>
-    </div>
-
-    <!-- 10 -->
-    <div class="row" data-left="Realistic" data-right="Unrealistic">
-      <div class="left">Realistic</div>
-      <div class="scale">
-        <input type="radio" name="t10" value="-2"><input type="radio" name="t10" value="-1"><input type="radio" name="t10" value="0"><input type="radio" name="t10" value="1"><input type="radio" name="t10" value="2">
-      </div>
-      <div class="right">Unrealistic</div>
-    </div>
-
-    <!-- 11 -->
-    <div class="row" data-left="Reasonable" data-right="Unreasonable">
-      <div class="left">Reasonable</div>
-      <div class="scale">
-        <input type="radio" name="t11" value="-2"><input type="radio" name="t11" value="-1"><input type="radio" name="t11" value="0"><input type="radio" name="t11" value="1"><input type="radio" name="t11" value="2">
-      </div>
-      <div class="right">Unreasonable</div>
-    </div>
-
-    <!-- 12 -->
-    <div class="row" data-left="Assertive" data-right="Submissive">
-      <div class="left">Assertive</div>
-      <div class="scale">
-        <input type="radio" name="t12" value="-2"><input type="radio" name="t12" value="-1"><input type="radio" name="t12" value="0"><input type="radio" name="t12" value="1"><input type="radio" name="t12" value="2">
-      </div>
-      <div class="right">Submissive</div>
-    </div>
-
-    <!-- 13 -->
-    <div class="row" data-left="Cooperative" data-right="Domineering">
-      <div class="left">Cooperative</div>
-      <div class="scale">
-        <input type="radio" name="t13" value="-2"><input type="radio" name="t13" value="-1"><input type="radio" name="t13" value="0"><input type="radio" name="t13" value="1"><input type="radio" name="t13" value="2">
-      </div>
-      <div class="right">Domineering</div>
-    </div>
-
-    <!-- 14 -->
-    <div class="row" data-left="Outgoing" data-right="Withdrawn">
-      <div class="left">Outgoing</div>
-      <div class="scale">
-        <input type="radio" name="t14" value="-2"><input type="radio" name="t14" value="-1"><input type="radio" name="t14" value="0"><input type="radio" name="t14" value="1"><input type="radio" name="t14" value="2">
-      </div>
-      <div class="right">Withdrawn</div>
-    </div>
-
-    <!-- 15 -->
-    <div class="row" data-left="Forgiving" data-right="Resentful">
-      <div class="left">Forgiving</div>
-      <div class="scale">
-        <input type="radio" name="t15" value="-2"><input type="radio" name="t15" value="-1"><input type="radio" name="t15" value="0"><input type="radio" name="t15" value="1"><input type="radio" name="t15" value="2">
-      </div>
-      <div class="right">Resentful</div>
-    </div>
-
-    <!-- 16 -->
-    <div class="row" data-left="Trusting" data-right="Suspicious">
-      <div class="left">Trusting</div>
-      <div class="scale">
-        <input type="radio" name="t16" value="-2"><input type="radio" name="t16" value="-1"><input type="radio" name="t16" value="0"><input type="radio" name="t16" value="1"><input type="radio" name="t16" value="2">
-      </div>
-      <div class="right">Suspicious</div>
-    </div>
-
-    <!-- 17 -->
-    <div class="row" data-left="Trustworthy" data-right="Prone to gossip">
-      <div class="left">Trustworthy</div>
-      <div class="scale">
-        <input type="radio" name="t17" value="-2"><input type="radio" name="t17" value="-1"><input type="radio" name="t17" value="0"><input type="radio" name="t17" value="1"><input type="radio" name="t17" value="2">
-      </div>
-      <div class="right">Prone to gossip</div>
-    </div>
-
-    <!-- 18 -->
-    <div class="row" data-left="Content" data-right="Envious">
-      <div class="left">Content</div>
-      <div class="scale">
-        <input type="radio" name="t18" value="-2"><input type="radio" name="t18" value="-1"><input type="radio" name="t18" value="0"><input type="radio" name="t18" value="1"><input type="radio" name="t18" value="2">
-      </div>
-      <div class="right">Envious</div>
-    </div>
-
-    <!-- 19 -->
-    <div class="row" data-left="Agreeable" data-right="Disagreeable">
-      <div class="left">Agreeable</div>
-      <div class="scale">
-        <input type="radio" name="t19" value="-2"><input type="radio" name="t19" value="-1"><input type="radio" name="t19" value="0"><input type="radio" name="t19" value="1"><input type="radio" name="t19" value="2">
-      </div>
-      <div class="right">Disagreeable</div>
-    </div>
-
-    <!-- 20 -->
-    <div class="row" data-left="Cheerful" data-right="Depressed">
-      <div class="left">Cheerful</div>
-      <div class="scale">
-        <input type="radio" name="t20" value="-2"><input type="radio" name="t20" value="-1"><input type="radio" name="t20" value="0"><input type="radio" name="t20" value="1"><input type="radio" name="t20" value="2">
-      </div>
-      <div class="right">Depressed</div>
-    </div>
-
-    <!-- 21 -->
-    <div class="row" data-left="Courteous" data-right="Discourteous">
-      <div class="left">Courteous</div>
-      <div class="scale">
-        <input type="radio" name="t21" value="-2"><input type="radio" name="t21" value="-1"><input type="radio" name="t21" value="0"><input type="radio" name="t21" value="1"><input type="radio" name="t21" value="2">
-      </div>
-      <div class="right">Discourteous</div>
-    </div>
-
-    <!-- 22 -->
-    <div class="row" data-left="Kind" data-right="Unkind">
-      <div class="left">Kind</div>
-      <div class="scale">
-        <input type="radio" name="t22" value="-2"><input type="radio" name="t22" value="-1"><input type="radio" name="t22" value="0"><input type="radio" name="t22" value="1"><input type="radio" name="t22" value="2">
-      </div>
-      <div class="right">Unkind</div>
-    </div>
-
-    <!-- 23 -->
-    <div class="row" data-left="Loving, caring" data-right="Indifferent">
-      <div class="left">Loving, caring</div>
-      <div class="scale">
-        <input type="radio" name="t23" value="-2"><input type="radio" name="t23" value="-1"><input type="radio" name="t23" value="0"><input type="radio" name="t23" value="1"><input type="radio" name="t23" value="2">
-      </div>
-      <div class="right">Indifferent</div>
-    </div>
-
-    <!-- 24 -->
-    <div class="row" data-left="Discreet" data-right="Lacking discretion">
-      <div class="left">Discreet</div>
-      <div class="scale">
-        <input type="radio" name="t24" value="-2"><input type="radio" name="t24" value="-1"><input type="radio" name="t24" value="0"><input type="radio" name="t24" value="1"><input type="radio" name="t24" value="2">
-      </div>
-      <div class="right">Lacking discretion</div>
-    </div>
-
-    <!-- 25 -->
-    <div class="row" data-left="Stable" data-right="Panicky, violent">
-      <div class="left">Stable</div>
-      <div class="scale">
-        <input type="radio" name="t25" value="-2"><input type="radio" name="t25" value="-1"><input type="radio" name="t25" value="0"><input type="radio" name="t25" value="1"><input type="radio" name="t25" value="2">
-      </div>
-      <div class="right">Panicky, violent</div>
-    </div>
-
-    <!-- 26 -->
-    <div class="row" data-left="Consistent" data-right="Inconsistent">
-      <div class="left">Consistent</div>
-      <div class="scale">
-        <input type="radio" name="t26" value="-2"><input type="radio" name="t26" value="-1"><input type="radio" name="t26" value="0"><input type="radio" name="t26" value="1"><input type="radio" name="t26" value="2">
-      </div>
-      <div class="right">Inconsistent</div>
-    </div>
-
-    <!-- 27 -->
-    <div class="row" data-left="Sincere" data-right="Insincere">
-      <div class="left">Sincere</div>
-      <div class="scale">
-        <input type="radio" name="t27" value="-2"><input type="radio" name="t27" value="-1"><input type="radio" name="t27" value="0"><input type="radio" name="t27" value="1"><input type="radio" name="t27" value="2">
-      </div>
-      <div class="right">Insincere</div>
-    </div>
-
-    <!-- 28 -->
-    <div class="row" data-left="Honest" data-right="Dishonest">
-      <div class="left">Honest</div>
-      <div class="scale">
-        <input type="radio" name="t28" value="-2"><input type="radio" name="t28" value="-1"><input type="radio" name="t28" value="0"><input type="radio" name="t28" value="1"><input type="radio" name="t28" value="2">
-      </div>
-      <div class="right">Dishonest</div>
-    </div>
-
-    <!-- 29 -->
-    <div class="row" data-left="Willing to admit faults" data-right="Self-righteous">
-      <div class="left">Willing to admit faults</div>
-      <div class="scale">
-        <input type="radio" name="t29" value="-2"><input type="radio" name="t29" value="-1"><input type="radio" name="t29" value="0"><input type="radio" name="t29" value="1"><input type="radio" name="t29" value="2">
-      </div>
-      <div class="right">Self-righteous</div>
-    </div>
-
-    <!-- 30 -->
-    <div class="row" data-left="Humble" data-right="Arrogant">
-      <div class="left">Humble</div>
-      <div class="scale">
-        <input type="radio" name="t30" value="-2"><input type="radio" name="t30" value="-1"><input type="radio" name="t30" value="0"><input type="radio" name="t30" value="1"><input type="radio" name="t30" value="2">
-      </div>
-      <div class="right">Arrogant</div>
-    </div>
-
-    <!-- 31 -->
-    <div class="row" data-left="Calm" data-right="Worrisome">
-      <div class="left">Calm</div>
-      <div class="scale">
-        <input type="radio" name="t31" value="-2"><input type="radio" name="t31" value="-1"><input type="radio" name="t31" value="0"><input type="radio" name="t31" value="1"><input type="radio" name="t31" value="2">
-      </div>
-      <div class="right">Worrisome</div>
-    </div>
-
-    <!-- 32 -->
-    <div class="row" data-left="Relaxed" data-right="Tense">
-      <div class="left">Relaxed</div>
-      <div class="scale">
-        <input type="radio" name="t32" value="-2"><input type="radio" name="t32" value="-1"><input type="radio" name="t32" value="0"><input type="radio" name="t32" value="1"><input type="radio" name="t32" value="2">
-      </div>
-      <div class="right">Tense</div>
-    </div>
-
-    <!-- 33 -->
-    <div class="row" data-left="Confident, having faith" data-right="Fearful, apprehensive">
-      <div class="left">Confident, having faith</div>
-      <div class="scale">
-        <input type="radio" name="t33" value="-2"><input type="radio" name="t33" value="-1"><input type="radio" name="t33" value="0"><input type="radio" name="t33" value="1"><input type="radio" name="t33" value="2">
-      </div>
-      <div class="right">Fearful, apprehensive</div>
-    </div>
-
-    <!-- 34 -->
-    <div class="row" data-left="Hopeful" data-right="Despondent">
-      <div class="left">Hopeful</div>
-      <div class="scale">
-        <input type="radio" name="t34" value="-2"><input type="radio" name="t34" value="-1"><input type="radio" name="t34" value="0"><input type="radio" name="t34" value="1"><input type="radio" name="t34" value="2">
-      </div>
-      <div class="right">Despondent</div>
-    </div>
-
-    <!-- 35 -->
-    <div class="row" data-left="Living for today" data-right="Living in the past, worrying about the future">
-      <div class="left">Living for today</div>
-      <div class="scale">
-        <input type="radio" name="t35" value="-2"><input type="radio" name="t35" value="-1"><input type="radio" name="t35" value="0"><input type="radio" name="t35" value="1"><input type="radio" name="t35" value="2">
-      </div>
-      <div class="right">Living in the past, worrying about the future</div>
-    </div>
-
-    <!-- 36 -->
-    <div class="row" data-left="Industrious" data-right="Lazy">
-      <div class="left">Industrious</div>
-      <div class="scale">
-        <input type="radio" name="t36" value="-2"><input type="radio" name="t36" value="-1"><input type="radio" name="t36" value="0"><input type="radio" name="t36" value="1"><input type="radio" name="t36" value="2">
-      </div>
-      <div class="right">Lazy</div>
-    </div>
-
-    <!-- 37 -->
-    <div class="row" data-left="Prompt" data-right="Procrastinating">
-      <div class="left">Prompt</div>
-      <div class="scale">
-        <input type="radio" name="t37" value="-2"><input type="radio" name="t37" value="-1"><input type="radio" name="t37" value="0"><input type="radio" name="t37" value="1"><input type="radio" name="t37" value="2">
-      </div>
-      <div class="right">Procrastinating</div>
-    </div>
-
-    <!-- 38 -->
-    <div class="row" data-left="Purposeful" data-right="Aimless">
-      <div class="left">Purposeful</div>
-      <div class="scale">
-        <input type="radio" name="t38" value="-2"><input type="radio" name="t38" value="-1"><input type="radio" name="t38" value="0"><input type="radio" name="t38" value="1"><input type="radio" name="t38" value="2">
-      </div>
-      <div class="right">Aimless</div>
-    </div>
-
-    <!-- 39 -->
-    <div class="row" data-left="Responsible" data-right="Irresponsible">
-      <div class="left">Responsible</div>
-      <div class="scale">
-        <input type="radio" name="t39" value="-2"><input type="radio" name="t39" value="-1"><input type="radio" name="t39" value="0"><input type="radio" name="t39" value="1"><input type="radio" name="t39" value="2">
-      </div>
-      <div class="right">Irresponsible</div>
-    </div>
-
-    <!-- 40 -->
-    <div class="row" data-left="Using talents and abilities" data-right="Disinterested in self">
-      <div class="left">Using talents and abilities</div>
-      <div class="scale">
-        <input type="radio" name="t40" value="-2"><input type="radio" name="t40" value="-1"><input type="radio" name="t40" value="0"><input type="radio" name="t40" value="1"><input type="radio" name="t40" value="2">
-      </div>
-      <div class="right">Disinterested in self</div>
-    </div>
-
-    <!-- 41 -->
-    <div class="row" data-left="Thankful" data-right="Ungrateful">
-      <div class="left">Thankful</div>
-      <div class="scale">
-        <input type="radio" name="t41" value="-2"><input type="radio" name="t41" value="-1"><input type="radio" name="t41" value="0"><input type="radio" name="t41" value="1"><input type="radio" name="t41" value="2">
-      </div>
-      <div class="right">Ungrateful</div>
-    </div>
-
-    <!-- 42 -->
-    <div class="row" data-left="Willing to continue to seek emotional and spiritual balance" data-right="Smug, complacent">
-      <div class="left">Willing to continue to seek emotional and spiritual balance</div>
-      <div class="scale">
-        <input type="radio" name="t42" value="-2"><input type="radio" name="t42" value="-1"><input type="radio" name="t42" value="0"><input type="radio" name="t42" value="1"><input type="radio" name="t42" value="2">
-      </div>
-      <div class="right">Smug, complacent</div>
-    </div>
-
-  </div>
-
-  <div class="footer">
-    Tip: This is a snapshot, not a verdict.
-    <div class="small">If “Copy results” doesn’t work, your viewer is blocking scripts. The dots still work as a visual check-in.</div>
-  </div>
-</div>
-
-<script>
-function updateProgress(){
-  const rows = document.querySelectorAll('.row');
-  let selected = 0;
-  rows.forEach((row, idx)=>{
-    const any = row.querySelector('input[type="radio"]:checked');
-    if(any) selected++;
-  });
-  const p = document.getElementById('progress');
-  p.textContent = `${selected} / 42 selected`;
-}
-
-document.querySelectorAll('input[type="radio"]').forEach(r=>{
-  r.addEventListener('change', updateProgress);
-});
-
-function clearAll(){
-  document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
-  updateProgress();
-}
-
-function posWord(v){
-  v = Number(v);
-  if(v===-2) return "strongly left";
-  if(v===-1) return "slightly left";
-  if(v===0) return "middle";
-  if(v===1) return "slightly right";
-  if(v===2) return "strongly right";
-  return "not set";
-}
-
-function buildResultsText(){
-  const date = document.getElementById('dateField').value.trim();
-  let out = "Blueprint for Progress – Check-In\n";
-  if(date) out += `Date: ${date}\n`;
-  out += "\n";
-
-  const rows = document.querySelectorAll('.row');
-  let left=0, mid=0, right=0, unset=0;
-
-  rows.forEach((row)=>{
-    const L = row.dataset.left;
-    const R = row.dataset.right;
-    const checked = row.querySelector('input[type="radio"]:checked');
-
-    if(!checked){
-      unset++;
-      out += `${L} | not set | ${R}\n`;
-      return;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blueprint for Progress – Character Traits Check-In</title>
+  <style>
+    :root {
+      --border: #d8d8d8;
+      --text: #111;
+      --muted: #555;
+      --rowA: #ffffff;
+      --rowB: #f6f6f6;
+      --chip: #f0f0f0;
+      --focus: #111;
     }
 
-    const v = Number(checked.value);
-    if(v<0) left++; else if(v===0) mid++; else right++;
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #fff;
+    }
 
-    const label =
-      v===-2 ? "strongly left (leans " + L + ")" :
-      v===-1 ? "slightly left (leans " + L + ")" :
-      v===0  ? "middle" :
-      v===1  ? "slightly right (leans " + R + ")" :
-               "strongly right (leans " + R + ")";
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 14px 28px;
+    }
 
-    out += `${L} | ${label} | ${R}\n`;
-  });
+    h1 {
+      font-size: 26px;
+      line-height: 1.2;
+      margin: 6px 0 10px;
+      font-weight: 750;
+    }
 
-  out += `\nSummary: left ${left}, middle ${mid}, right ${right}, not set ${unset}\n`;
-  return out;
-}
+    .sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
 
-function openResults(text){
-  document.getElementById('resultsBox').value = text;
-  document.getElementById('copyHint').textContent = "";
-  document.getElementById('resultsModal').style.display = "block";
-}
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 10px 0 14px;
+    }
 
-function closeResults(){
-  document.getElementById('resultsModal').style.display = "none";
-}
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-function selectAllResults(){
-  const box = document.getElementById('resultsBox');
-  box.focus();
-  box.select();
-  box.setSelectionRange(0, box.value.length);
-}
+    button:active {
+      transform: translateY(1px);
+    }
 
-async function copyFromBox(){
-  const text = document.getElementById('resultsBox').value;
-  try{
-    await navigator.clipboard.writeText(text);
-    document.getElementById('copyHint').textContent = "Copied ✅ Now paste in Notes.";
-  }catch(e){
-    // Try execCommand copy from a real selection
-    selectAllResults();
-    let ok = false;
-    try{ ok = document.execCommand('copy'); }catch(_){}
-    document.getElementById('copyHint').textContent =
-      ok ? "Copied ✅ Now paste in Notes." : "Tap Select all, then use iOS Copy.";
-  }
-}
+    .dateRow {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 10px 0 8px;
+    }
 
-function copyResults(){
-  openResults(buildResultsText());
-  // Try to copy automatically (works on some setups); if blocked, user can manually copy.
-  setTimeout(()=>copyFromBox(), 50);
-}
+    .dateRow label {
+      color: var(--muted);
+      font-size: 16px;
+    }
 
-updateProgress();
-</script>
+    input[type="date"] {
+      font-size: 16px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .count {
+      margin: 8px 0 10px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .table {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
+      gap: 10px;
+      align-items: center;
+      padding: 12px 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .row:first-child {
+      border-top: none;
+    }
+
+    .row:nth-child(odd) { background: var(--rowA); }
+    .row:nth-child(even) { background: var(--rowB); }
+
+    .trait {
+      font-size: 16px;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .trait.right {
+      text-align: right;
+    }
+
+    .dots {
+      display: flex;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+    }
+
+    .dotWrap {
+      position: relative;
+      width: 20px;
+      height: 20px;
+    }
+
+    .dotWrap input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 2px solid #bdbdbd;
+      background: #fff;
+      box-sizing: border-box;
+      display: grid;
+      place-items: center;
+    }
+
+    .dot::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: transparent;
+    }
+
+    .dotWrap input:checked + .dot {
+      border-color: #111;
+    }
+
+    .dotWrap input:checked + .dot::after {
+      background: #111;
+    }
+
+    .dotWrap input:focus-visible + .dot {
+      outline: 3px solid #000;
+      outline-offset: 2px;
+    }
+
+    .tip {
+      margin: 12px 2px 0;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal.open { display: flex; }
+
+    .modalCard {
+      width: min(720px, 100%);
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 14px;
+    }
+
+    .modalHead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .modalHead strong {
+      font-size: 16px;
+    }
+
+    .modalHead button {
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      resize: vertical;
+    }
+
+    @media (max-width: 640px) {
+      .row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .trait.right { text-align: left; }
+      .dots { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Blueprint for Progress – Character Traits Check-In</h1>
+    <p class="sub">
+      Tap one dot per row. Middle = balanced/neutral. Dots toward either side show where you lean today. No numbers needed.
+    </p>
+
+    <div class="controls">
+      <button id="clearBtn" type="button">Clear all</button>
+      <button id="copyBtn" type="button">Copy results</button>
+    </div>
+
+    <div class="dateRow">
+      <label for="dateInput">Date (optional):</label>
+      <input id="dateInput" type="date" />
+    </div>
+
+    <div class="count" id="countText">0 / 42 selected</div>
+
+    <div class="table" id="table"></div>
+
+    <p class="tip">
+      Tip: This is a snapshot, not a verdict. Progress, not perfection.
+    </p>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Copy blocked by this browser. Use Select All → Copy:</strong>
+        <button type="button" id="closeModal">Close</button>
+      </div>
+      <textarea id="fallbackText" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    // Trait pairs (left = strength, right = defect)
+    const TRAITS = [
+      ["Aware of others", "Self-centered"],
+      ["Helpful to others", "Self-indulgent"],
+      ["Generous", "Selfish"],
+      ["Thoughtful", "Self-pitying"],
+      ["Open-minded, gracious", "Smug, stubborn"],
+      ["Perceptive", "Judgmental"],
+      ["Respectful", "Disrespectful"],
+      ["Patient", "Impatient"],
+      ["Tolerant", "Intolerant"],
+      ["Realistic", "Unrealistic"],
+      ["Reasonable", "Unreasonable"],
+      ["Assertive", "Submissive"],
+      ["Cooperative", "Domineering"],
+      ["Outgoing", "Withdrawn"],
+      ["Forgiving", "Resentful"],
+      ["Trusting", "Suspicious"],
+      ["Trustworthy", "Prone to gossip"],
+      ["Content", "Envious"],
+      ["Agreeable", "Disagreeable"],
+      ["Cheerful", "Depressed"],
+      ["Courteous", "Discourteous"],
+      ["Kind", "Unkind"],
+      ["Loving, caring", "Indifferent"],
+      ["Discreet", "Lacking discretion"],
+      ["Stable", "Panicky, violent"],
+      ["Consistent", "Inconsistent"],
+      ["Sincere", "Insincere"],
+      ["Honest", "Dishonest"],
+      ["Willing to admit faults", "Self-righteous"],
+      ["Humble", "Arrogant"],
+      ["Calm", "Worrisome"],
+      ["Relaxed", "Tense"],
+      ["Confident, having faith", "Fearful, apprehensive"],
+      ["Hopeful", "Despondent"],
+      ["Living for today", "Living in the past, worrying about the future"],
+      ["Industrious", "Lazy"],
+      ["Prompt", "Procrastinating"],
+      ["Purposeful", "Aimless"],
+      ["Responsible", "Irresponsible"],
+      ["Using talents and abilities", "Disinterested in self"],
+      ["Thankful", "Ungrateful"],
+      ["Willing to continue to seek emotional and spiritual balance", "Smug, complacent"]
+    ];
+
+    // 5-point scale: 1..5
+    // 1 strongly left, 2 slightly left, 3 middle, 4 slightly right, 5 strongly right
+    const LABELS = {
+      1: "strongly left",
+      2: "slightly left",
+      3: "middle",
+      4: "slightly right",
+      5: "strongly right"
+    };
+
+    const STORAGE_KEY = "bp_checkin_v2";
+    const DATE_KEY = "bp_checkin_date_v2";
+
+    const tableEl = document.getElementById("table");
+    const countText = document.getElementById("countText");
+    const dateInput = document.getElementById("dateInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const copyBtn = document.getElementById("copyBtn");
+
+    const modal = document.getElementById("modal");
+    const fallbackText = document.getElementById("fallbackText");
+    const closeModal = document.getElementById("closeModal");
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const state = raw ? JSON.parse(raw) : {};
+        return (state && typeof state === "object") ? state : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadDate() {
+      const d = localStorage.getItem(DATE_KEY);
+      if (d) dateInput.value = d;
+    }
+
+    function saveDate() {
+      localStorage.setItem(DATE_KEY, dateInput.value || "");
+    }
+
+    function selectedCount(state) {
+      return Object.values(state).filter(v => v >= 1 && v <= 5).length;
+    }
+
+    function updateCount(state) {
+      countText.textContent = `${selectedCount(state)} / ${TRAITS.length} selected`;
+    }
+
+    function buildRow(idx, left, right, state) {
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const leftEl = document.createElement("div");
+      leftEl.className = "trait left";
+      leftEl.textContent = left;
+
+      const rightEl = document.createElement("div");
+      rightEl.className = "trait right";
+      rightEl.textContent = right;
+
+      const dots = document.createElement("div");
+      dots.className = "dots";
+      dots.setAttribute("role", "radiogroup");
+      dots.setAttribute("aria-label", `${left} vs ${right}`);
+
+      const name = `trait_${idx}`;
+      const current = state[name];
+
+      for (let v = 1; v <= 5; v++) {
+        const wrap = document.createElement("label");
+        wrap.className = "dotWrap";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = name;
+        input.value = String(v);
+        input.checked = (Number(current) === v);
+
+        input.addEventListener("change", () => {
+          const s = loadState();
+          s[name] = v;
+          saveState(s);
+          updateCount(s);
+        });
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+
+        wrap.appendChild(input);
+        wrap.appendChild(dot);
+        dots.appendChild(wrap);
+      }
+
+      row.appendChild(leftEl);
+      row.appendChild(dots);
+      row.appendChild(rightEl);
+      return row;
+    }
+
+    function render() {
+      const state = loadState();
+      tableEl.innerHTML = "";
+      TRAITS.forEach((pair, idx) => {
+        tableEl.appendChild(buildRow(idx, pair[0], pair[1], state));
+      });
+      updateCount(state);
+    }
+
+    function leanText(value, left, right) {
+      const v = Number(value);
+      if (!(v >= 1 && v <= 5)) return "not set";
+
+      if (v === 3) return "middle";
+      if (v === 1) return `strongly left (leans ${left})`;
+      if (v === 2) return `slightly left (leans ${left})`;
+      if (v === 4) return `slightly right (leans ${right})`;
+      if (v === 5) return `strongly right (leans ${right})`;
+      return "not set";
+    }
+
+    function buildResultsText() {
+      const state = loadState();
+      const date = (dateInput.value || "").trim();
+
+      let leftLean = 0, mid = 0, rightLean = 0, notSet = 0;
+
+      const lines = [];
+      lines.push("Blueprint for Progress – Check-In");
+      if (date) lines.push(`Date: ${date}`);
+      lines.push("");
+
+      TRAITS.forEach((pair, idx) => {
+        const key = `trait_${idx}`;
+        const v = Number(state[key]);
+        const left = pair[0];
+        const right = pair[1];
+
+        const center = leanText(v, left, right);
+        lines.push(`${left} | ${center} | ${right}`);
+
+        if (!(v >= 1 && v <= 5)) notSet++;
+        else if (v <= 2) leftLean++;
+        else if (v === 3) mid++;
+        else rightLean++;
+      });
+
+      lines.push("");
+      lines.push(`Summary: left-leaning ${leftLean}, middle ${mid}, right-leaning ${rightLean}, not set ${notSet}`);
+
+      return lines.join("\n");
+    }
+
+    async function copyToClipboard(text) {
+      // Modern path (works best on https pages like GitHub Pages)
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+
+      // Fallback for older/blocked environments
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    function openFallback(text) {
+      fallbackText.value = text;
+      modal.classList.add("open");
+      // iOS: selecting in the modal is easiest for users
+      setTimeout(() => {
+        fallbackText.focus();
+        fallbackText.select();
+      }, 50);
+    }
+
+    clearBtn.addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const text = buildResultsText();
+      try {
+        const ok = await copyToClipboard(text);
+        if (!ok) openFallback(text);
+      } catch {
+        openFallback(text);
+      }
+    });
+
+    closeModal.addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+
+    dateInput.addEventListener("change", saveDate);
+
+    loadDate();
+    render();
+  </script>
 </body>
 </html>
