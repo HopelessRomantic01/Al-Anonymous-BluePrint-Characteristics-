@@ -230,14 +230,32 @@
       resize: vertical;
     }
 
-    @media (max-width: 640px) {
-      .row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-      .trait.right { text-align: left; }
-      .dots { justify-content: center; }
-    }
+@media (max-width: 640px) {
+  .row{
+    grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+
+  .trait{
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .trait.right{
+    text-align: right;
+  }
+
+  .dots{
+    gap: 8px;
+    padding: 7px 8px;
+  }
+
+  /* Slightly smaller dots so everything fits */
+  .dotWrap{ width: 18px; height: 18px; }
+  .dot{ width: 18px; height: 18px; }
+  .dot::after{ width: 7px; height: 7px; }
+}
   </style>
 </head>
 <body>
