@@ -5,259 +5,269 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blueprint for Progress – Character Traits Check-In</title>
   <style>
-    :root {
-      --border: #d8d8d8;
-      --text: #111;
-      --muted: #555;
-      --rowA: #ffffff;
-      --rowB: #f6f6f6;
-      --chip: #f0f0f0;
-      --focus: #111;
+    :root{
+      --border:#d8d8d8;
+      --text:#111;
+      --muted:#555;
+      --rowA:#ffffff;
+      --rowB:#f6f6f6;
+      --shadow: rgba(0,0,0,.08);
     }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text);
-      background: #fff;
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:#fff;
     }
 
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 18px 14px 28px;
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:18px 14px 28px;
     }
 
-    h1 {
-      font-size: 26px;
-      line-height: 1.2;
-      margin: 6px 0 10px;
-      font-weight: 750;
+    h1{
+      font-size:26px;
+      line-height:1.2;
+      margin:6px 0 10px;
+      font-weight:750;
     }
 
-    .sub {
-      margin: 0 0 14px;
-      color: var(--muted);
-      line-height: 1.4;
+    .sub{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.4;
     }
 
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin: 10px 0 14px;
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin:10px 0 14px;
     }
 
-    button {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      font-size:16px;
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .dateRow{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin:10px 0 8px;
+    }
+    .dateRow label{
+      color:var(--muted);
+      font-size:16px;
+    }
+    input[type="date"]{
+      font-size:16px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:12px;
     }
 
-    button:active {
-      transform: translateY(1px);
+    .count{
+      margin:8px 0 10px;
+      color:var(--muted);
+      font-size:16px;
     }
 
-    .dateRow {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin: 10px 0 8px;
+    .table{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
     }
 
-    .dateRow label {
-      color: var(--muted);
-      font-size: 16px;
+    .row{
+      display:grid;
+      grid-template-columns:minmax(170px,1fr) auto minmax(170px,1fr);
+      gap:10px;
+      align-items:center;
+      padding:12px 12px;
+      border-top:1px solid var(--border);
+    }
+    .row:first-child{ border-top:none; }
+    .row:nth-child(odd){ background:var(--rowA); }
+    .row:nth-child(even){ background:var(--rowB); }
+
+    .trait{
+      font-size:16px;
+      line-height:1.2;
+      word-break:break-word;
+    }
+    .trait.right{ text-align:right; }
+
+    .dots{
+      display:flex;
+      gap:10px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      box-shadow:0 1px 0 var(--shadow);
+      justify-content:center;
     }
 
-    input[type="date"] {
-      font-size: 16px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .dotWrap{
+      position:relative;
+      width:20px;
+      height:20px;
+    }
+    .dotWrap input{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      cursor:pointer;
+    }
+    .dot{
+      width:20px;
+      height:20px;
+      border-radius:999px;
+      border:2px solid #bdbdbd;
+      background:#fff;
+      box-sizing:border-box;
+      display:grid;
+      place-items:center;
+    }
+    .dot::after{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:transparent;
+    }
+    .dotWrap input:checked + .dot{ border-color:#111; }
+    .dotWrap input:checked + .dot::after{ background:#111; }
+    .dotWrap input:focus-visible + .dot{
+      outline:3px solid #000;
+      outline-offset:2px;
     }
 
-    .count {
-      margin: 8px 0 10px;
-      color: var(--muted);
-      font-size: 16px;
+    .tip{
+      margin:12px 2px 10px;
+      color:var(--muted);
+      line-height:1.4;
     }
 
-    .table {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
+    .resultsBox{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+      margin-top:12px;
+    }
+    .resultsTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+    .resultsTop strong{ font-size:15px; }
+
+    #resultsText{
+      width:100%;
+      min-height:160px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      font-size:14px;
+      line-height:1.4;
+      resize:vertical;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
-      gap: 10px;
-      align-items: center;
-      padding: 12px 12px;
-      border-top: 1px solid var(--border);
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal.open{ display:flex; }
+
+    .modalCard{
+      width:min(720px,100%);
+      background:#fff;
+      border-radius:16px;
+      border:1px solid var(--border);
+      padding:14px;
     }
 
-    .row:first-child {
-      border-top: none;
+    .modalHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modalHead strong{ font-size:16px; }
+    .modalHead button{
+      padding:8px 10px;
+      border-radius:10px;
     }
 
-    .row:nth-child(odd) { background: var(--rowA); }
-    .row:nth-child(even) { background: var(--rowB); }
-
-    .trait {
-      font-size: 16px;
-      line-height: 1.2;
-      word-break: break-word;
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background:#111;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:14px;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease;
+      z-index:60;
     }
+    .toast.show{ opacity:1; }
 
-    .trait.right {
-      text-align: right;
+    /* ✅ Mobile: keep rows HORIZONTAL so the spectrum reads correctly */
+    @media (max-width: 640px){
+      .row{
+        grid-template-columns:minmax(110px,1fr) auto minmax(110px,1fr);
+        gap:8px;
+        align-items:center;
+      }
+
+      .trait{
+        font-size:14px;
+        line-height:1.15;
+      }
+
+      .trait.right{
+        text-align:right;
+      }
+
+      .dots{
+        gap:8px;
+        padding:7px 8px;
+      }
+
+      /* Slightly smaller dots so everything fits */
+      .dotWrap{ width:18px; height:18px; }
+      .dot{ width:18px; height:18px; }
+      .dot::after{ width:7px; height:7px; }
     }
-
-    .dots {
-      display: flex;
-      gap: 10px;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: #fff;
-    }
-
-    .dotWrap {
-      position: relative;
-      width: 20px;
-      height: 20px;
-    }
-
-    .dotWrap input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 999px;
-      border: 2px solid #bdbdbd;
-      background: #fff;
-      box-sizing: border-box;
-      display: grid;
-      place-items: center;
-    }
-
-    .dot::after {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: transparent;
-    }
-
-    .dotWrap input:checked + .dot {
-      border-color: #111;
-    }
-
-    .dotWrap input:checked + .dot::after {
-      background: #111;
-    }
-
-    .dotWrap input:focus-visible + .dot {
-      outline: 3px solid #000;
-      outline-offset: 2px;
-    }
-
-    .tip {
-      margin: 12px 2px 0;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 50;
-    }
-
-    .modal.open { display: flex; }
-
-    .modalCard {
-      width: min(720px, 100%);
-      background: #fff;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 14px;
-    }
-
-    .modalHead {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .modalHead strong {
-      font-size: 16px;
-    }
-
-    .modalHead button {
-      padding: 8px 10px;
-      border-radius: 10px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 220px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      line-height: 1.4;
-      resize: vertical;
-    }
-
-@media (max-width: 640px) {
-  .row{
-    grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr);
-    gap: 8px;
-    align-items: center;
-  }
-
-  .trait{
-    font-size: 14px;
-    line-height: 1.15;
-  }
-
-  .trait.right{
-    text-align: right;
-  }
-
-  .dots{
-    gap: 8px;
-    padding: 7px 8px;
-  }
-
-  /* Slightly smaller dots so everything fits */
-  .dotWrap{ width: 18px; height: 18px; }
-  .dot{ width: 18px; height: 18px; }
-  .dot::after{ width: 7px; height: 7px; }
-}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <h1>Blueprint for Progress – Character Traits Check-In</h1>
@@ -268,6 +278,7 @@
     <div class="controls">
       <button id="clearBtn" type="button">Clear all</button>
       <button id="copyBtn" type="button">Copy results</button>
+      <button id="openBtn" type="button">Open results</button>
     </div>
 
     <div class="dateRow">
@@ -279,186 +290,134 @@
 
     <div class="table" id="table"></div>
 
-    <p class="tip">
-      Tip: This is a snapshot, not a verdict. Progress, not perfection.
-    </p>
+    <p class="tip">Tip: This is a snapshot, not a verdict. Progress, not perfection.</p>
+
+    <div class="resultsBox">
+      <div class="resultsTop">
+        <strong>Results (always available):</strong>
+        <span style="color:var(--muted);font-size:14px;">If “Copy results” fails, copy from here.</span>
+      </div>
+      <textarea id="resultsText" readonly></textarea>
+    </div>
   </div>
 
   <div class="modal" id="modal">
     <div class="modalCard">
       <div class="modalHead">
-        <strong>Copy blocked by this browser. Use Select All → Copy:</strong>
+        <strong>Copy blocked. Use Select All → Copy:</strong>
         <button type="button" id="closeModal">Close</button>
       </div>
       <textarea id="fallbackText" readonly></textarea>
     </div>
   </div>
 
+  <div class="toast" id="toast">Copied ✅</div>
+
   <script>
-    // Trait pairs (left = strength, right = defect)
     const TRAITS = [
-      ["Aware of others", "Self-centered"],
-      ["Helpful to others", "Self-indulgent"],
-      ["Generous", "Selfish"],
-      ["Thoughtful", "Self-pitying"],
-      ["Open-minded, gracious", "Smug, stubborn"],
-      ["Perceptive", "Judgmental"],
-      ["Respectful", "Disrespectful"],
-      ["Patient", "Impatient"],
-      ["Tolerant", "Intolerant"],
-      ["Realistic", "Unrealistic"],
-      ["Reasonable", "Unreasonable"],
-      ["Assertive", "Submissive"],
-      ["Cooperative", "Domineering"],
-      ["Outgoing", "Withdrawn"],
-      ["Forgiving", "Resentful"],
-      ["Trusting", "Suspicious"],
-      ["Trustworthy", "Prone to gossip"],
-      ["Content", "Envious"],
-      ["Agreeable", "Disagreeable"],
-      ["Cheerful", "Depressed"],
-      ["Courteous", "Discourteous"],
-      ["Kind", "Unkind"],
-      ["Loving, caring", "Indifferent"],
-      ["Discreet", "Lacking discretion"],
-      ["Stable", "Panicky, violent"],
-      ["Consistent", "Inconsistent"],
-      ["Sincere", "Insincere"],
-      ["Honest", "Dishonest"],
-      ["Willing to admit faults", "Self-righteous"],
-      ["Humble", "Arrogant"],
-      ["Calm", "Worrisome"],
-      ["Relaxed", "Tense"],
-      ["Confident, having faith", "Fearful, apprehensive"],
-      ["Hopeful", "Despondent"],
-      ["Living for today", "Living in the past, worrying about the future"],
-      ["Industrious", "Lazy"],
-      ["Prompt", "Procrastinating"],
-      ["Purposeful", "Aimless"],
-      ["Responsible", "Irresponsible"],
-      ["Using talents and abilities", "Disinterested in self"],
-      ["Thankful", "Ungrateful"],
-      ["Willing to continue to seek emotional and spiritual balance", "Smug, complacent"]
+      ["Aware of others","Self-centered"],
+      ["Helpful to others","Self-indulgent"],
+      ["Generous","Selfish"],
+      ["Thoughtful","Self-pitying"],
+      ["Open-minded, gracious","Smug, stubborn"],
+      ["Perceptive","Judgmental"],
+      ["Respectful","Disrespectful"],
+      ["Patient","Impatient"],
+      ["Tolerant","Intolerant"],
+      ["Realistic","Unrealistic"],
+      ["Reasonable","Unreasonable"],
+      ["Assertive","Submissive"],
+      ["Cooperative","Domineering"],
+      ["Outgoing","Withdrawn"],
+      ["Forgiving","Resentful"],
+      ["Trusting","Suspicious"],
+      ["Trustworthy","Prone to gossip"],
+      ["Content","Envious"],
+      ["Agreeable","Disagreeable"],
+      ["Cheerful","Depressed"],
+      ["Courteous","Discourteous"],
+      ["Kind","Unkind"],
+      ["Loving, caring","Indifferent"],
+      ["Discreet","Lacking discretion"],
+      ["Stable","Panicky, violent"],
+      ["Consistent","Inconsistent"],
+      ["Sincere","Insincere"],
+      ["Honest","Dishonest"],
+      ["Willing to admit faults","Self-righteous"],
+      ["Humble","Arrogant"],
+      ["Calm","Worrisome"],
+      ["Relaxed","Tense"],
+      ["Confident, having faith","Fearful, apprehensive"],
+      ["Hopeful","Despondent"],
+      ["Living for today","Living in the past, worrying about the future"],
+      ["Industrious","Lazy"],
+      ["Prompt","Procrastinating"],
+      ["Purposeful","Aimless"],
+      ["Responsible","Irresponsible"],
+      ["Using talents and abilities","Disinterested in self"],
+      ["Thankful","Ungrateful"],
+      ["Willing to continue to seek emotional and spiritual balance","Smug, complacent"]
     ];
 
-    // 5-point scale: 1..5
-    // 1 strongly left, 2 slightly left, 3 middle, 4 slightly right, 5 strongly right
-    const LABELS = {
-      1: "strongly left",
-      2: "slightly left",
-      3: "middle",
-      4: "slightly right",
-      5: "strongly right"
-    };
-
-    const STORAGE_KEY = "bp_checkin_v2";
-    const DATE_KEY = "bp_checkin_date_v2";
+    const STORAGE_KEY = "bp_checkin_v3";
+    const DATE_KEY = "bp_checkin_date_v3";
 
     const tableEl = document.getElementById("table");
     const countText = document.getElementById("countText");
     const dateInput = document.getElementById("dateInput");
+
     const clearBtn = document.getElementById("clearBtn");
     const copyBtn = document.getElementById("copyBtn");
+    const openBtn = document.getElementById("openBtn");
 
     const modal = document.getElementById("modal");
     const fallbackText = document.getElementById("fallbackText");
     const closeModal = document.getElementById("closeModal");
 
-    function loadState() {
-      try {
+    const resultsText = document.getElementById("resultsText");
+    const toast = document.getElementById("toast");
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 900);
+    }
+
+    function loadState(){
+      try{
         const raw = localStorage.getItem(STORAGE_KEY);
         const state = raw ? JSON.parse(raw) : {};
         return (state && typeof state === "object") ? state : {};
-      } catch {
+      }catch{
         return {};
       }
     }
 
-    function saveState(state) {
+    function saveState(state){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function loadDate() {
+    function loadDate(){
       const d = localStorage.getItem(DATE_KEY);
       if (d) dateInput.value = d;
     }
 
-    function saveDate() {
+    function saveDate(){
       localStorage.setItem(DATE_KEY, dateInput.value || "");
+      updateResultsBox();
     }
 
-    function selectedCount(state) {
+    function selectedCount(state){
       return Object.values(state).filter(v => v >= 1 && v <= 5).length;
     }
 
-    function updateCount(state) {
+    function updateCount(state){
       countText.textContent = `${selectedCount(state)} / ${TRAITS.length} selected`;
     }
 
-    function buildRow(idx, left, right, state) {
-      const row = document.createElement("div");
-      row.className = "row";
-
-      const leftEl = document.createElement("div");
-      leftEl.className = "trait left";
-      leftEl.textContent = left;
-
-      const rightEl = document.createElement("div");
-      rightEl.className = "trait right";
-      rightEl.textContent = right;
-
-      const dots = document.createElement("div");
-      dots.className = "dots";
-      dots.setAttribute("role", "radiogroup");
-      dots.setAttribute("aria-label", `${left} vs ${right}`);
-
-      const name = `trait_${idx}`;
-      const current = state[name];
-
-      for (let v = 1; v <= 5; v++) {
-        const wrap = document.createElement("label");
-        wrap.className = "dotWrap";
-
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = name;
-        input.value = String(v);
-        input.checked = (Number(current) === v);
-
-        input.addEventListener("change", () => {
-          const s = loadState();
-          s[name] = v;
-          saveState(s);
-          updateCount(s);
-        });
-
-        const dot = document.createElement("span");
-        dot.className = "dot";
-
-        wrap.appendChild(input);
-        wrap.appendChild(dot);
-        dots.appendChild(wrap);
-      }
-
-      row.appendChild(leftEl);
-      row.appendChild(dots);
-      row.appendChild(rightEl);
-      return row;
-    }
-
-    function render() {
-      const state = loadState();
-      tableEl.innerHTML = "";
-      TRAITS.forEach((pair, idx) => {
-        tableEl.appendChild(buildRow(idx, pair[0], pair[1], state));
-      });
-      updateCount(state);
-    }
-
-    function leanText(value, left, right) {
+    function leanText(value, left, right){
       const v = Number(value);
       if (!(v >= 1 && v <= 5)) return "not set";
-
       if (v === 3) return "middle";
       if (v === 1) return `strongly left (leans ${left})`;
       if (v === 2) return `slightly left (leans ${left})`;
@@ -467,12 +426,11 @@
       return "not set";
     }
 
-    function buildResultsText() {
+    function buildResultsText(){
       const state = loadState();
       const date = (dateInput.value || "").trim();
 
       let leftLean = 0, mid = 0, rightLean = 0, notSet = 0;
-
       const lines = [];
       lines.push("Blueprint for Progress – Check-In");
       if (date) lines.push(`Date: ${date}`);
@@ -495,40 +453,90 @@
 
       lines.push("");
       lines.push(`Summary: left-leaning ${leftLean}, middle ${mid}, right-leaning ${rightLean}, not set ${notSet}`);
-
       return lines.join("\n");
     }
 
-    async function copyToClipboard(text) {
-      // Modern path (works best on https pages like GitHub Pages)
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+    function updateResultsBox(){
+      resultsText.value = buildResultsText();
+    }
+
+    function buildRow(idx, left, right, state){
+      const row = document.createElement("div");
+      row.className = "row";
+
+      const leftEl = document.createElement("div");
+      leftEl.className = "trait left";
+      leftEl.textContent = left;
+
+      const dots = document.createElement("div");
+      dots.className = "dots";
+      dots.setAttribute("role","radiogroup");
+      dots.setAttribute("aria-label", `${left} vs ${right}`);
+
+      const rightEl = document.createElement("div");
+      rightEl.className = "trait right";
+      rightEl.textContent = right;
+
+      const name = `trait_${idx}`;
+      const current = state[name];
+
+      for (let v = 1; v <= 5; v++){
+        const wrap = document.createElement("label");
+        wrap.className = "dotWrap";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = name;
+        input.value = String(v);
+        input.checked = (Number(current) === v);
+
+        input.addEventListener("change", () => {
+          const s = loadState();
+          s[name] = v;
+          saveState(s);
+          updateCount(s);
+          updateResultsBox();
+        });
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+
+        wrap.appendChild(input);
+        wrap.appendChild(dot);
+        dots.appendChild(wrap);
+      }
+
+      row.appendChild(leftEl);
+      row.appendChild(dots);
+      row.appendChild(rightEl);
+      return row;
+    }
+
+    function render(){
+      const state = loadState();
+      tableEl.innerHTML = "";
+      TRAITS.forEach((pair, idx) => tableEl.appendChild(buildRow(idx, pair[0], pair[1], state)));
+      updateCount(state);
+      updateResultsBox();
+    }
+
+    async function copyToClipboard(text){
+      if (navigator.clipboard && navigator.clipboard.writeText){
         await navigator.clipboard.writeText(text);
         return true;
       }
-
-      // Fallback for older/blocked environments
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.setAttribute("readonly", "");
-      ta.style.position = "fixed";
-      ta.style.top = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-
-      let ok = false;
-      try {
-        ok = document.execCommand("copy");
-      } catch {
-        ok = false;
+      resultsText.focus();
+      resultsText.select();
+      try{
+        return document.execCommand("copy");
+      }catch{
+        return false;
       }
-      document.body.removeChild(ta);
-      return ok;
     }
 
-    function openFallback(text) {
+    function openFallback(text){
       fallbackText.value = text;
       modal.classList.add("open");
-      // iOS: selecting in the modal is easiest for users
       setTimeout(() => {
         fallbackText.focus();
         fallbackText.select();
@@ -538,17 +546,21 @@
     clearBtn.addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEY);
       render();
+      showToast("Cleared");
     });
 
     copyBtn.addEventListener("click", async () => {
       const text = buildResultsText();
-      try {
+      try{
         const ok = await copyToClipboard(text);
-        if (!ok) openFallback(text);
-      } catch {
+        if (ok) showToast("Copied ✅");
+        else openFallback(text);
+      }catch{
         openFallback(text);
       }
     });
+
+    openBtn.addEventListener("click", () => openFallback(buildResultsText()));
 
     closeModal.addEventListener("click", () => modal.classList.remove("open"));
     modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
